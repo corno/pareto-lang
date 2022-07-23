@@ -1,8 +1,6 @@
 {
   "author": "Corno",
   "bin": {},
-  "dependencies": {
-  },
   "files": [
     "dist",
     "data"
@@ -22,5 +20,5 @@
   },
   "types": "dist/index.d.ts",
   "version": "0.1.2",
-  "content-fingerprint": "ef15240704cf296d6cfe16b71895fb280e620843"
+  "content-fingerprint": "85c2777530f60df1d4d65054ecac3b18fc0a229a"
 }
