@@ -8,17 +8,17 @@
   "keywords": [],
   "main": "./dist/index.js",
   "bugs": {
-    "url": "https://github.com/corno/astn/issues"
+    "url": "https://github.com/corno/pareto/issues"
   },
-  "description": "api for serializing ASTN data",
+  "description": "",
   "homepage": "https://github.com/corno/astn#readme",
   "license": "ISC",
-  "name": "astn-expect-api",
+  "name": "astn-lang-api",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/corno/astn-expect.git"
+    "url": "git+https://github.com/corno/pareto-lang.git"
   },
   "types": "dist/index.d.ts",
   "version": "0.1.2",
-  "content-fingerprint": "85c2777530f60df1d4d65054ecac3b18fc0a229a"
+  "content-fingerprint": "cb60fd2b97e65b29088b0e9062c4020254433b44"
 }
