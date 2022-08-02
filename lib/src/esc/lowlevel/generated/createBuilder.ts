@@ -9,7 +9,6 @@
 */
 import * as pa from "pareto-api-core"
 import * as pl from "pareto-lib-core"
-import * as pr from "pareto-runtime"
 import * as t from "./types"
 
 export function createBuilder<TokenAnnotation>(
@@ -22,7 +21,7 @@ export function createBuilder<TokenAnnotation>(
             "interfaces": intermediate["interfaces"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__interfaces_T> => {{
                 const source = intermediate["interfaces"]
                 const target: { [key:string]: t.__interfaces_T} = {}
-                pr.Objectkeys(source).forEach((key) => {
+                Object.keys(source).forEach((key) => {
                     const entry = source[key]
                     target[key] = {
                         "interface": entry["interface"] === undefined ? _default_generateBuilder_interface_definition() : _generateBuilder_interface_definition(entry["interface"]),
@@ -195,7 +194,7 @@ export function createBuilder<TokenAnnotation>(
                             "members": intermediate["type"][1]["members"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__members_T> => {{
                                 const source = intermediate["type"][1]["members"]
                                 const target: { [key:string]: t.__members_T} = {}
-                                pr.Objectkeys(source).forEach((key) => {
+                                Object.keys(source).forEach((key) => {
                                     const entry = source[key]
                                     target[key] = {
                                         "definition": entry["definition"] === undefined ? _default_generateBuilder_interface_definition() : _generateBuilder_interface_definition(entry["definition"]),
@@ -270,7 +269,7 @@ export function createBuilder<TokenAnnotation>(
                                             "entries": intermediate["type"][1]["type"][1]["entries"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__entries_T> => {{
                                                 const source = intermediate["type"][1]["type"][1]["entries"]
                                                 const target: { [key:string]: t.__entries_T} = {}
-                                                pr.Objectkeys(source).forEach((key) => {
+                                                Object.keys(source).forEach((key) => {
                                                     const entry = source[key]
                                                     target[key] = {
                                                         "expression": entry["expression"] === undefined ? _default_generateBuilder_interface_expression() : _generateBuilder_interface_expression(entry["expression"]),
@@ -290,7 +289,7 @@ export function createBuilder<TokenAnnotation>(
                                                             "members": intermediate["type"][1]["type"][1]["strategy"][1]["members"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__members_inline_T> => {{
                                                                 const source = intermediate["type"][1]["type"][1]["strategy"][1]["members"]
                                                                 const target: { [key:string]: t.__members_inline_T} = {}
-                                                                pr.Objectkeys(source).forEach((key) => {
+                                                                Object.keys(source).forEach((key) => {
                                                                     const entry = source[key]
                                                                     target[key] = {
                                                                         "expression": entry["expression"] === undefined ? _default_generateBuilder_interface_expression() : _generateBuilder_interface_expression(entry["expression"]),
@@ -371,7 +370,7 @@ export function createBuilder<TokenAnnotation>(
             "parameters": intermediate["parameters"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__parameters_T> => {{
                 const source = intermediate["parameters"]
                 const target: { [key:string]: t.__parameters_T} = {}
-                pr.Objectkeys(source).forEach((key) => {
+                Object.keys(source).forEach((key) => {
                     const entry = source[key]
                     target[key] = {
                         "type": entry["type"] === undefined ? [ "group", {
@@ -383,7 +382,7 @@ export function createBuilder<TokenAnnotation>(
                                         "members": entry["type"][1]["members"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__members_group_T> => {{
                                             const source = entry["type"][1]["members"]
                                             const target: { [key:string]: t.__members_group_T} = {}
-                                            pr.Objectkeys(source).forEach((key) => {
+                                            Object.keys(source).forEach((key) => {
                                                 const entry = source[key]
                                                 target[key] = {
                                                     "definition": entry["definition"] === undefined ? _default_generateBuilder_interface_definition() : _generateBuilder_interface_definition(entry["definition"]),
@@ -517,7 +516,7 @@ export function createBuilder<TokenAnnotation>(
             "type arguments": intermediate["type arguments"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__type_arguments_T> => {{
                 const source = intermediate["type arguments"]
                 const target: { [key:string]: t.__type_arguments_T} = {}
-                pr.Objectkeys(source).forEach((key) => {
+                Object.keys(source).forEach((key) => {
                     const entry = source[key]
                     target[key] = {
                         "type": entry["type"] === undefined ? "*type argument type*" : entry["type"],
@@ -694,7 +693,7 @@ export function createBuilder<TokenAnnotation>(
             "markers": intermediate["markers"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__markers_T> => {{
                 const source = intermediate["markers"]
                 const target: { [key:string]: t.__markers_T} = {}
-                pr.Objectkeys(source).forEach((key) => {
+                Object.keys(source).forEach((key) => {
                     const entry = source[key]
                     target[key] = {
                         "selection": entry["selection"] === undefined ? _default_generateBuilder_context_selection() : _generateBuilder_context_selection(entry["selection"]),
@@ -705,7 +704,7 @@ export function createBuilder<TokenAnnotation>(
             "nested procedures": intermediate["nested procedures"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__nested_procedures_T> => {{
                 const source = intermediate["nested procedures"]
                 const target: { [key:string]: t.__nested_procedures_T} = {}
-                pr.Objectkeys(source).forEach((key) => {
+                Object.keys(source).forEach((key) => {
                     const entry = source[key]
                     target[key] = {
                         "specification": entry["specification"] === undefined ? _default_generateBuilder_internal_procedure_specification() : _generateBuilder_internal_procedure_specification(entry["specification"]),
@@ -729,7 +728,7 @@ export function createBuilder<TokenAnnotation>(
             "states": intermediate["states"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__states_T> => {{
                 const source = intermediate["states"]
                 const target: { [key:string]: t.__states_T} = {}
-                pr.Objectkeys(source).forEach((key) => {
+                Object.keys(source).forEach((key) => {
                     const entry = source[key]
                     target[key] = {
                         "type": entry["type"] === undefined ? [ "string", {
@@ -782,7 +781,7 @@ export function createBuilder<TokenAnnotation>(
             "interface arguments": intermediate["interface arguments"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__interface_arguments_T> => {{
                 const source = intermediate["interface arguments"]
                 const target: { [key:string]: t.__interface_arguments_T} = {}
-                pr.Objectkeys(source).forEach((key) => {
+                Object.keys(source).forEach((key) => {
                     const entry = source[key]
                     target[key] = {
                         "expression": entry["expression"] === undefined ? _default_generateBuilder_interface_expression() : _generateBuilder_interface_expression(entry["expression"]),
@@ -807,7 +806,7 @@ export function createBuilder<TokenAnnotation>(
             "function implementations": intermediate["function implementations"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__function_implementations_T> => {{
                 const source = intermediate["function implementations"]
                 const target: { [key:string]: t.__function_implementations_T} = {}
-                pr.Objectkeys(source).forEach((key) => {
+                Object.keys(source).forEach((key) => {
                     const entry = source[key]
                     target[key] = {
                         "block": entry["block"] === undefined ? _default_generateBuilder_type_expression_block() : _generateBuilder_type_expression_block(entry["block"]),
@@ -816,7 +815,7 @@ export function createBuilder<TokenAnnotation>(
                         "type parameters": entry["type parameters"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__type_parameters_T> => {{
                             const source = entry["type parameters"]
                             const target: { [key:string]: t.__type_parameters_T} = {}
-                            pr.Objectkeys(source).forEach((key) => {
+                            Object.keys(source).forEach((key) => {
                                 const entry = source[key]
                                 target[key] = {
                                 }
@@ -830,13 +829,13 @@ export function createBuilder<TokenAnnotation>(
             "namespaces": intermediate["namespaces"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__namespaces_T> => {{
                 const source = intermediate["namespaces"]
                 const target: { [key:string]: t.__namespaces_T} = {}
-                pr.Objectkeys(source).forEach((key) => {
+                Object.keys(source).forEach((key) => {
                     const entry = source[key]
                     target[key] = {
                         "function declarations": entry["function declarations"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__function_declarations_T> => {{
                             const source = entry["function declarations"]
                             const target: { [key:string]: t.__function_declarations_T} = {}
-                            pr.Objectkeys(source).forEach((key) => {
+                            Object.keys(source).forEach((key) => {
                                 const entry = source[key]
                                 target[key] = {
                                     "declaration": entry["declaration"] === undefined ? _default_generateBuilder_function_declaration() : _generateBuilder_function_declaration(entry["declaration"]),
@@ -847,13 +846,13 @@ export function createBuilder<TokenAnnotation>(
                         "interface builders": entry["interface builders"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__interface_builders_T> => {{
                             const source = entry["interface builders"]
                             const target: { [key:string]: t.__interface_builders_T} = {}
-                            pr.Objectkeys(source).forEach((key) => {
+                            Object.keys(source).forEach((key) => {
                                 const entry = source[key]
                                 target[key] = {
                                     "methods": entry["methods"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__methods_T> => {{
                                         const source = entry["methods"]
                                         const target: { [key:string]: t.__methods_T} = {}
-                                        pr.Objectkeys(source).forEach((key) => {
+                                        Object.keys(source).forEach((key) => {
                                             const entry = source[key]
                                             target[key] = {
                                                 "declaration": entry["declaration"] === undefined ? _default_generateBuilder_builder_procedure_declaration() : _generateBuilder_builder_procedure_declaration(entry["declaration"]),
@@ -868,7 +867,7 @@ export function createBuilder<TokenAnnotation>(
                         "interfaces": entry["interfaces"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__interfaces_namespaces_T> => {{
                             const source = entry["interfaces"]
                             const target: { [key:string]: t.__interfaces_namespaces_T} = {}
-                            pr.Objectkeys(source).forEach((key) => {
+                            Object.keys(source).forEach((key) => {
                                 const entry = source[key]
                                 target[key] = {
                                     "definition": entry["definition"] === undefined ? _default_generateBuilder_interface_definition() : _generateBuilder_interface_definition(entry["definition"]),
@@ -879,13 +878,13 @@ export function createBuilder<TokenAnnotation>(
                         "procedure declarations": entry["procedure declarations"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__procedure_declarations_T> => {{
                             const source = entry["procedure declarations"]
                             const target: { [key:string]: t.__procedure_declarations_T} = {}
-                            pr.Objectkeys(source).forEach((key) => {
+                            Object.keys(source).forEach((key) => {
                                 const entry = source[key]
                                 target[key] = {
                                     "builders": entry["builders"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__builders_T> => {{
                                         const source = entry["builders"]
                                         const target: { [key:string]: t.__builders_T} = {}
-                                        pr.Objectkeys(source).forEach((key) => {
+                                        Object.keys(source).forEach((key) => {
                                             const entry = source[key]
                                             target[key] = {
                                                 "builder": entry["builder"] === undefined ? "*referenced builder*" : entry["builder"],
@@ -898,7 +897,7 @@ export function createBuilder<TokenAnnotation>(
                                     "functions": entry["functions"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__functions_T> => {{
                                         const source = entry["functions"]
                                         const target: { [key:string]: t.__functions_T} = {}
-                                        pr.Objectkeys(source).forEach((key) => {
+                                        Object.keys(source).forEach((key) => {
                                             const entry = source[key]
                                             target[key] = {
                                                 "declaration": entry["declaration"] === undefined ? _default_generateBuilder_function_declaration() : _generateBuilder_function_declaration(entry["declaration"]),
@@ -909,7 +908,7 @@ export function createBuilder<TokenAnnotation>(
                                     "interfaces": entry["interfaces"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__interfaces_procedure_declarations_T> => {{
                                         const source = entry["interfaces"]
                                         const target: { [key:string]: t.__interfaces_procedure_declarations_T} = {}
-                                        pr.Objectkeys(source).forEach((key) => {
+                                        Object.keys(source).forEach((key) => {
                                             const entry = source[key]
                                             target[key] = {
                                                 "interface": entry["interface"] === undefined ? _default_generateBuilder_interface_definition() : _generateBuilder_interface_definition(entry["interface"]),
@@ -937,7 +936,7 @@ export function createBuilder<TokenAnnotation>(
                         "type parameters": entry["type parameters"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__type_parameters_namespaces_T> => {{
                             const source = entry["type parameters"]
                             const target: { [key:string]: t.__type_parameters_namespaces_T} = {}
-                            pr.Objectkeys(source).forEach((key) => {
+                            Object.keys(source).forEach((key) => {
                                 const entry = source[key]
                                 target[key] = {
                                 }
@@ -947,7 +946,7 @@ export function createBuilder<TokenAnnotation>(
                         "types": entry["types"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__types_T> => {{
                             const source = entry["types"]
                             const target: { [key:string]: t.__types_T} = {}
-                            pr.Objectkeys(source).forEach((key) => {
+                            Object.keys(source).forEach((key) => {
                                 const entry = source[key]
                                 target[key] = {
                                     "type": entry["type"] === undefined ? _default_generateBuilder_type() : _generateBuilder_type(entry["type"]),
@@ -962,7 +961,7 @@ export function createBuilder<TokenAnnotation>(
             "procedure implementations": intermediate["procedure implementations"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__procedure_implementations_T> => {{
                 const source = intermediate["procedure implementations"]
                 const target: { [key:string]: t.__procedure_implementations_T} = {}
-                pr.Objectkeys(source).forEach((key) => {
+                Object.keys(source).forEach((key) => {
                     const entry = source[key]
                     target[key] = {
                         "block": entry["block"] === undefined ? _default_generateBuilder_procedure_block() : _generateBuilder_procedure_block(entry["block"]),
@@ -971,7 +970,7 @@ export function createBuilder<TokenAnnotation>(
                         "type parameters": entry["type parameters"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__type_parameters_procedure_implementations_T> => {{
                             const source = entry["type parameters"]
                             const target: { [key:string]: t.__type_parameters_procedure_implementations_T} = {}
-                            pr.Objectkeys(source).forEach((key) => {
+                            Object.keys(source).forEach((key) => {
                                 const entry = source[key]
                                 target[key] = {
                                 }
@@ -1060,7 +1059,7 @@ export function createBuilder<TokenAnnotation>(
                             "properties": intermediate["type"][1]["properties"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__properties_T> => {{
                                 const source = intermediate["type"][1]["properties"]
                                 const target: { [key:string]: t.__properties_T} = {}
-                                pr.Objectkeys(source).forEach((key) => {
+                                Object.keys(source).forEach((key) => {
                                     const entry = source[key]
                                     target[key] = {
                                         "type": entry["type"] === undefined ? _default_generateBuilder_type() : _generateBuilder_type(entry["type"]),
@@ -1084,7 +1083,7 @@ export function createBuilder<TokenAnnotation>(
                             "options": intermediate["type"][1]["options"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__options_T> => {{
                                 const source = intermediate["type"][1]["options"]
                                 const target: { [key:string]: t.__options_T} = {}
-                                pr.Objectkeys(source).forEach((key) => {
+                                Object.keys(source).forEach((key) => {
                                     const entry = source[key]
                                     target[key] = {
                                         "type": entry["type"] === undefined ? _default_generateBuilder_type() : _generateBuilder_type(entry["type"]),
@@ -1153,7 +1152,7 @@ export function createBuilder<TokenAnnotation>(
                                             "properties": intermediate["strategy"][1]["type"][1]["properties"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__properties_group_T> => {{
                                                 const source = intermediate["strategy"][1]["type"][1]["properties"]
                                                 const target: { [key:string]: t.__properties_group_T} = {}
-                                                pr.Objectkeys(source).forEach((key) => {
+                                                Object.keys(source).forEach((key) => {
                                                     const entry = source[key]
                                                     target[key] = {
                                                         "expression": entry["expression"] === undefined ? _default_generateBuilder_type_expression() : _generateBuilder_type_expression(entry["expression"]),
@@ -1200,7 +1199,7 @@ export function createBuilder<TokenAnnotation>(
                             "options": intermediate["strategy"][1]["options"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__options_switch_T> => {{
                                 const source = intermediate["strategy"][1]["options"]
                                 const target: { [key:string]: t.__options_switch_T} = {}
-                                pr.Objectkeys(source).forEach((key) => {
+                                Object.keys(source).forEach((key) => {
                                     const entry = source[key]
                                     target[key] = {
                                         "expression": entry["expression"] === undefined ? _default_generateBuilder_type_expression() : _generateBuilder_type_expression(entry["expression"]),
@@ -1234,7 +1233,7 @@ export function createBuilder<TokenAnnotation>(
             "functions": intermediate["functions"] === undefined ? pl.createDictionary({}) : ((): pa.IReadonlyDictionary<t.__functions_type_expression_block_T> => {{
                 const source = intermediate["functions"]
                 const target: { [key:string]: t.__functions_type_expression_block_T} = {}
-                pr.Objectkeys(source).forEach((key) => {
+                Object.keys(source).forEach((key) => {
                     const entry = source[key]
                     target[key] = {
                         "block": entry["block"] === undefined ? _default_generateBuilder_type_expression_block() : _generateBuilder_type_expression_block(entry["block"]),

@@ -1,5 +1,4 @@
 import { Block, Line } from "./WriteAPI"
-import * as pr from "pareto-runtime"
 
 export function createFile(
     indentation: string,
@@ -31,7 +30,7 @@ export function createFile(
                                 currentIndentation + indentation,
                                 () => {
                                     if (currentLine !== null) {
-                                        write(pr.trimRight(currentLine))
+                                        write(currentLine.trimRight())
                                         currentLine = null
                                     }
                                 },
@@ -51,7 +50,7 @@ export function createFile(
                     currentIndentation
                 ))
                 if (currentLine !== null) {
-                    write(pr.trimRight(currentLine))
+                    write(currentLine.trimRight())
                 }
             },
         }

@@ -10,6 +10,7 @@ interface Array<T> {
 
 interface String {
     replace(val: RegExp, val2: string): string
+    trimRight(): string
 }
 
 
@@ -20,3 +21,9 @@ interface ErrorConstructor {
 declare let Error: ErrorConstructor;
 
 declare function isNaN(v: any): boolean
+
+interface Object {
+    keys(obj: any): string[]
+}
+
+declare let Object: Object

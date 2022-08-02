@@ -2,7 +2,6 @@
     "dot-notation": off,
     "@typescript-eslint/no-unused-vars": off,
 */
-import * as pr from "pareto-runtime"
 import * as pa from "pareto-api-core"
 import * as pl from "pareto-lib-core"
 import * as ll from "../generated/types"
@@ -18,9 +17,8 @@ function doDictionary<T>(
 ) {
     let isEmpty = true
     let isFirst = true
-    dict.toArray().forEach(($x) => {
-        const $ = $x.value
-        const key = $x.key
+    dict.forEach(() => false, ($x, key) => {
+        const $ = $x
         if (isFirst) {
             onBegin()
         } else {
@@ -44,10 +42,10 @@ function findImp<T>(
 ): T {
     let res: T | null = null
     const options: string[] = []
-    dict.toArray().forEach(($) => {
-        options.push($.key)
-        if ($.key === name) {
-            res = $.value
+    dict.forEach(() => false, ($, key) => {
+        options.push(key)
+        if (key === name) {
+            res = $
         }
     })
     if (res !== null) {
@@ -90,7 +88,7 @@ function findInStack<T>(
             return tmp
         }
     }
-    throw new Error(`missing: ${name}, options: ${pr.Objectkeys(opts).map(($) => `'${$}'`).join(`, `)}`)
+    throw new Error(`missing: ${name}, options: ${Object.keys(opts).map(($) => `'${$}'`).join(`, `)}`)
 }
 
 function generateIdentifier(str: string) {
@@ -263,11 +261,11 @@ export function generateTypeScript(
                 $w.snippet(`$i: `)
                 $w.snippet(`{`)
                 $w.indent(($w) => {
-                    $.interfaces.toArray().forEach(($) => {
+                    $.interfaces.forEach(() => false, ($, key) => {
                         $w.line(($w) => {
-                            $w.snippet(`${generateQuoted($.key)}: `)
+                            $w.snippet(`${generateQuoted(key)}: `)
                             generateInterfaceDefinition(
-                                $.value.interface,
+                                $.interface,
                                 $w,
                                 namespaceName,
                                 typeArgumentsCallback,
@@ -281,14 +279,14 @@ export function generateTypeScript(
                 $w.snippet(`$b: `)
                 $w.snippet(`{`)
                 $w.indent(($w) => {
-                    $.builders.toArray().forEach(($) => {
+                    $.builders.forEach(() => false, ($, key) => {
                         $w.line(($w) => {
-                            $w.snippet(`${generateQuoted($.key)}: `)
+                            $w.snippet(`${generateQuoted(key)}: `)
                             generateNamespacedIdentifier(
-                                $.value["namespace selection"],
+                                $["namespace selection"],
                                 $w,
                                 ($w) => {
-                                    $w.snippet(`_${$.value.builder}_IB`)
+                                    $w.snippet(`_${$.builder}_IB`)
                                 },
                                 namespaceName,
                                 typeArgumentsCallback,
@@ -302,11 +300,11 @@ export function generateTypeScript(
                 $w.snippet(`$f: `)
                 $w.snippet(`{`)
                 $w.indent(($w) => {
-                    $.functions.toArray().forEach(($) => {
+                    $.functions.forEach(() => false, ($, key) => {
                         $w.line(($w) => {
-                            $w.snippet(`${generateQuoted($.key)}: `)
+                            $w.snippet(`${generateQuoted(key)}: `)
                             generateFunctionDeclaration(
-                                $.value.declaration,
+                                $.declaration,
                                 $w,
                                 ` =>`,
                                 namespaceName,
@@ -459,11 +457,11 @@ export function generateTypeScript(
                 pl.cc($.type[1], ($) => {
                     $w.snippet(`{`)
                     $w.indent(($w) => {
-                        $.members.toArray().forEach(($) => {
+                        $.members.forEach(() => false, ($, key) => {
                             $w.line(($w) => {
-                                $w.snippet(`${generateQuoted($.key)}: `)
+                                $w.snippet(`${generateQuoted(key)}: `)
                                 generateInterfaceDefinition(
-                                    $.value.definition,
+                                    $.definition,
                                     $w,
                                     namespaceName,
                                     typeArgumentsCallback,
@@ -1018,15 +1016,15 @@ export function generateTypeScript(
                             pl.cc($.type[1], ($) => {
                                 $w.snippet(`{`)
                                 $w.indent(($w) => {
-                                    $.properties.toArray().forEach(($) => {
+                                    $.properties.forEach(() => false, ($, key) => {
                                         $w.line(($w) => {
-                                            $w.snippet(`${generateQuoted($.key)}: `)
+                                            $w.snippet(`${generateQuoted(key)}: `)
                                             generateTypeExpression(
-                                                $.value.expression,
+                                                $.expression,
                                                 $w,
                                                 {
                                                     context: $r.context,
-                                                    target: $r.target.group().property($.key),
+                                                    target: $r.target.group().property(key),
                                                     markedValues: $r.markedValues,
                                                     states: $r.states,
                                                     nestedFunctions: $r.nestedFunctions,
@@ -1162,9 +1160,9 @@ export function generateTypeScript(
                     )
                     $w.snippet(`switch ($c[0]) {`)
                     $w.indent(($w) => {
-                        $.options.toArray().forEach(($) => {
+                        $.options.forEach(() => false, ($, key) => {
                             $w.line(($w) => {
-                                $w.snippet(`case ${generateQuoted($.key)}: {`)
+                                $w.snippet(`case ${generateQuoted(key)}: {`)
                                 $w.indent(($w) => {
                                     $w.line(($w) => {
                                         $w.snippet(`return pl.cc($c[1], ($c) => {`)
@@ -1172,7 +1170,7 @@ export function generateTypeScript(
                                             $w.line(($w) => {
                                                 $w.snippet(`return `)
                                                 generateTypeExpression(
-                                                    $.value.expression,
+                                                    $.expression,
                                                     $w,
                                                     {
                                                         context: getGuaranteedContextSelection(
@@ -1186,7 +1184,7 @@ export function generateTypeScript(
                                                                 externalFunctions: $r.externalFunctions,
                                                                 namespaceName: $r.namespaceName,
                                                             },
-                                                        ).taggedUnion().option($.key),
+                                                        ).taggedUnion().option(key),
                                                         target: $r.target,
                                                         markedValues: $r.markedValues,
                                                         states: $r.states,
@@ -1258,10 +1256,10 @@ export function generateTypeScript(
         $w.snippet(`{`)
         $w.indent(($w) => {
             const $teb = $
-            $["functions"].toArray().forEach(($) => {
+            $["functions"].forEach(() => false, ($, key) => {
                 $w.line(() => { })
                 $w.line(($w) => {
-                    $w.snippet(`function ${generateIdentifier($.key)}_fi`)
+                    $w.snippet(`function ${generateIdentifier(key)}_fi`)
                     // generateFunctionDeclaration(
                     //     $.declaration,
                     //     $w,
@@ -1291,15 +1289,15 @@ export function generateTypeScript(
                     // )
                     $w.snippet(` `)
                     generateTypeExpressionBlock(
-                        $.value.block,
+                        $.block,
                         $w,
                         {
                             context: getTypeReference(
-                                $.value.declaration.in,
+                                $.declaration.in,
                                 $r.currentNamespaceName,
                             ),
                             target: getTypeReference(
-                                $.value.declaration.out,
+                                $.declaration.out,
                                 $r.currentNamespaceName,
                             ),
                             currentNamespaceName: $r.currentNamespaceName,
@@ -1402,7 +1400,7 @@ export function generateTypeScript(
                 $w.snippet(`return {`)
                 $w.indent(($w) => {
                     $w.line(($w) => {
-                        $w.snippet(`forEach: (callback: (e: T, key: string) => void) => { pr.Objectkeys(raw).sort().forEach((key) => { callback(raw[key], key) }) },`)
+                        $w.snippet(`forEach: (callback: (e: T, key: string) => void) => { Object.keys(raw).sort().forEach((key) => { callback(raw[key], key) }) },`)
                     })
                 })
                 $w.snippet(`}`)
@@ -1426,9 +1424,9 @@ export function generateTypeScript(
         })
         $w.snippet(`}`)
     })
-    $.namespaces.toArray().forEach((xx) => {
-        const ns = xx.value
-        const namespaceName = xx.key
+    $.namespaces.forEach(() => false, (xx, key) => {
+        const ns = xx
+        const namespaceName = key
         //console.error(`NAMESPACE: ${namespaceName}`)
         function generateTypeParameters(
             $w: Line
@@ -1453,7 +1451,7 @@ export function generateTypeScript(
             )
         }
 
-        ns.types.toArray().forEach(($) => {
+        ns.types.forEach(() => false, ($, key) => {
             function generateTypeUsage(
                 $: ll.__type_T,
                 x: TypeNameBuilder,
@@ -1574,10 +1572,10 @@ export function generateTypeScript(
                     }
                     case "group": {
                         const $ = $$.type[1]
-                        $.properties.toArray().forEach(($$) => {
+                        $.properties.forEach(() => false, ($$, key) => {
                             generateCodeForTypeTree(
-                                $$.value.type,
-                                x.group().property($$.key),
+                                $$.type,
+                                x.group().property(key),
                             )
                         })
                         //generate code for this type
@@ -1587,13 +1585,13 @@ export function generateTypeScript(
                             generateTypeParameters($w)
                             $w.snippet(` = {`)
                             $w.indent(($w) => {
-                                $.properties.toArray().forEach(($$) => {
+                                $.properties.forEach(() => false, ($$) => {
                                     $w.line(($w) => {
-                                        $w.snippet(`readonly ${generateQuoted($$.key)}`)
+                                        $w.snippet(`readonly ${generateQuoted(key)}`)
                                         $w.snippet(`: `)
                                         generateTypeUsage(
-                                            $$.value.type,
-                                            x.group().property($$.key),
+                                            $$.type,
+                                            x.group().property(key),
                                             $w,
                                         )
                                     })
@@ -1633,10 +1631,10 @@ export function generateTypeScript(
                     case "tagged union": {
                         const $ = $$.type[1]
                         const tu = x.taggedUnion()
-                        $.options.toArray().forEach(($$) => {
+                        $.options.forEach(() => false, ($$, key) => {
                             generateCodeForTypeTree(
-                                $$.value.type,
-                                tu.option($$.key)
+                                $$.type,
+                                tu.option(key)
                             )
                         })
                         $w.line(() => { })
@@ -1645,12 +1643,12 @@ export function generateTypeScript(
                             generateTypeParameters($w)
                             $w.snippet(` = `)
                             $w.indent(($w) => {
-                                $.options.toArray().forEach(($) => {
+                                $.options.forEach(() => false, ($, key) => {
                                     $w.line(($w) => {
-                                        $w.snippet(`| [${generateQuoted($.key)}, `)
+                                        $w.snippet(`| [${generateQuoted(key)}, `)
                                         generateTypeUsage(
-                                            $.value.type,
-                                            tu.option($.key),
+                                            $.type,
+                                            tu.option(key),
                                             $w,
                                         )
                                         $w.snippet(`]`)
@@ -1670,30 +1668,30 @@ export function generateTypeScript(
                 }
             }
             generateCodeForTypeTree(
-                $.value.type,
-                createNameBuilder($root, namespaceName).type($.key),
+                $.type,
+                createNameBuilder($root, namespaceName).type(key),
             )
             //generate code for this type
             $w.line(() => { })
             $w.line(($w) => {
-                $w.snippet(`type ${generateIdentifier(namespaceName)}_${generateIdentifier($.key)}_T`)
+                $w.snippet(`type ${generateIdentifier(namespaceName)}_${generateIdentifier(key)}_T`)
                 generateTypeParameters($w)
                 $w.snippet(` = `)
                 generateTypeUsage(
-                    $.value.type,
-                    createNameBuilder($root, namespaceName).type($.key),
+                    $.type,
+                    createNameBuilder($root, namespaceName).type(key),
                     $w,
                 )
             })
         })
-        ns.interfaces.toArray().forEach(($) => {
+        ns.interfaces.forEach(() => false, ($, key) => {
             $w.line(() => { })
             $w.line(($w) => {
-                $w.snippet(`export type ${generateIdentifier(namespaceName)}_${generateIdentifier($.key)}_I`)
+                $w.snippet(`export type ${generateIdentifier(namespaceName)}_${generateIdentifier(key)}_I`)
                 generateTypeParameters($w)
                 $w.snippet(` = `)
                 generateInterfaceDefinition(
-                    $.value["definition"],
+                    $["definition"],
                     $w,
                     namespaceName,
                     ($w) => {
@@ -1719,15 +1717,15 @@ export function generateTypeScript(
                 )
             })
         })
-        ns["interface builders"].toArray().forEach(($) => {
+        ns["interface builders"].forEach(() => false, ($, key) => {
             $w.line(() => { })
             $w.line(($w) => {
-                $w.snippet(`export interface ${generateIdentifier(namespaceName)}_${generateIdentifier($.key)}_IB`)
+                $w.snippet(`export interface ${generateIdentifier(namespaceName)}_${generateIdentifier(key)}_IB`)
                 generateTypeParameters($w)
                 $w.snippet(` `)
                 $w.snippet(`{`)
                 $w.indent(($w) => {
-                    $.value.methods.toArray().forEach(($) => {
+                    $.methods.forEach(() => false, ($, key) => {
                         function generateBuilderProcedureDeclaration(
                             $: ll.__builder_procedure_declaration_T,
                             $w: Line,
@@ -1741,11 +1739,11 @@ export function generateTypeScript(
                                     $w.snippet(`$i: `)
                                     $w.snippet(`{`)
                                     $w.indent(($w) => {
-                                        $.interfaces.toArray().forEach(($) => {
+                                        $.interfaces.forEach(() => false, ($, key) => {
                                             $w.line(($w) => {
-                                                $w.snippet(`${generateQuoted($.key)}: `)
+                                                $w.snippet(`${generateQuoted(key)}: `)
                                                 generateInterfaceDefinition(
-                                                    $.value.interface,
+                                                    $.interface,
                                                     $w,
                                                     namespaceName,
                                                     typeArgumentsCallback,
@@ -1778,9 +1776,9 @@ export function generateTypeScript(
                             }
                         }
                         $w.line(($w) => {
-                            $w.snippet(`${generateQuoted($.key)}`)
+                            $w.snippet(`${generateQuoted(key)}`)
                             generateBuilderProcedureDeclaration(
-                                $.value.declaration,
+                                $.declaration,
                                 $w,
                                 `:`,
                                 namespaceName,
@@ -1811,14 +1809,14 @@ export function generateTypeScript(
                 $w.snippet(`}`)
             })
         })
-        ns["function declarations"].toArray().forEach(($) => {
+        ns["function declarations"].forEach(() => false, ($, key) => {
             $w.line(() => { })
             $w.line(($w) => {
-                $w.snippet(`export type ${generateIdentifier(namespaceName)}_${generateIdentifier($.key)}_PD`)
+                $w.snippet(`export type ${generateIdentifier(namespaceName)}_${generateIdentifier(key)}_PD`)
                 generateTypeParameters($w)
                 $w.snippet(` = `)
                 generateFunctionDeclaration(
-                    $.value.declaration,
+                    $.declaration,
                     $w,
                     ` =>`,
                     namespaceName,
@@ -1845,14 +1843,14 @@ export function generateTypeScript(
                 )
             })
         })
-        ns["procedure declarations"].toArray().forEach(($) => {
+        ns["procedure declarations"].forEach(() => false, ($, key) => {
             $w.line(() => { })
             $w.line(($w) => {
-                $w.snippet(`export type ${generateIdentifier(namespaceName)}_${generateIdentifier($.key)}_PD`)
+                $w.snippet(`export type ${generateIdentifier(namespaceName)}_${generateIdentifier(key)}_PD`)
                 generateTypeParameters($w)
                 $w.snippet(` = `)
                 generateProcedureDeclaration(
-                    $.value,
+                    $,
                     $w,
                     ` =>`,
                     namespaceName,
@@ -1880,15 +1878,15 @@ export function generateTypeScript(
             })
         })
     })
-    $["function implementations"].toArray().forEach(($) => {
+    $["function implementations"].forEach(() => false, ($, key) => {
         //console.error(`FUNCTION IMP: ${key}`)
-        const ns2 = $.value["namespace reference"]
+        const ns2 = $["namespace reference"]
         $w.line(() => { })
         $w.line(($w) => {
-            const decl = find(find($root.namespaces, ns2.namespace)["function declarations"], $.value.declaration)
-            $w.snippet(`export function ${generateIdentifier($.key)}_fi`)
+            const decl = find(find($root.namespaces, ns2.namespace)["function declarations"], $.declaration)
+            $w.snippet(`export function ${generateIdentifier(key)}_fi`)
             doDictionary(
-                $.value["type parameters"],
+                $["type parameters"],
                 () => {
                     //
                 },
@@ -1909,11 +1907,11 @@ export function generateTypeScript(
                 decl.declaration,
                 $w,
                 `:`,
-                $.value["namespace reference"].namespace,
+                $["namespace reference"].namespace,
                 ($w) => {
                     doDictionary(
                         //should be parameters
-                        $.value["namespace reference"]["type arguments"],
+                        $["namespace reference"]["type arguments"],
                         () => {
                             //
                         },
@@ -1935,7 +1933,7 @@ export function generateTypeScript(
             )
             $w.snippet(` `)
             generateTypeExpressionBlock(
-                $.value.block,
+                $.block,
                 $w,
                 {
                     context: getTypeReference(decl.declaration.in, ns2.namespace),
@@ -1949,10 +1947,10 @@ export function generateTypeScript(
             )
         })
     })
-    $["procedure implementations"].toArray().forEach(($) => {
+    $["procedure implementations"].forEach(() => false, ($, key) => {
         //console.error(`PROCEDURE IMP: ${key}`)
         const $pi = $
-        const decl = find(find($root.namespaces, $pi.value["namespace reference"].namespace)["procedure declarations"], $.value.declaration)
+        const decl = find(find($root.namespaces, $pi["namespace reference"].namespace)["procedure declarations"], $.declaration)
 
         function generateprocedureBlock(
             $: ll.__procedure_block_T,
@@ -1978,21 +1976,21 @@ export function generateTypeScript(
                 $w.snippet(`($ip: `)
                 $w.snippet(`{`)
                 $w.indent(($w) => {
-                    $.parameters.toArray().forEach(($) => {
+                    $.parameters.forEach(() => false, ($, key) => {
                         $w.line(($w) => {
-                            $w.snippet(`${generateQuoted($.key)}: `)
-                            switch ($.value.type[0]) {
+                            $w.snippet(`${generateQuoted(key)}: `)
+                            switch ($.type[0]) {
                                 case "group":
-                                    pl.cc($.value.type[1], ($) => {
+                                    pl.cc($.type[1], ($) => {
                                         $w.snippet(`{`)
                                         $w.indent(($w) => {
-                                            $.members.toArray().forEach(($) => {
+                                            $.members.forEach(() => false, ($, key) => {
                                                 $w.line(($w) => {
-                                                    $w.snippet(`${generateQuoted($.key)}: `)
+                                                    $w.snippet(`${generateQuoted(key)}: `)
                                                     generateInterfaceDefinition(
-                                                        $.value.definition,
+                                                        $.definition,
                                                         $w,
-                                                        $pi.value["namespace reference"].namespace,
+                                                        $pi["namespace reference"].namespace,
                                                         () => { },
                                                     )
                                                 })
@@ -2002,7 +2000,7 @@ export function generateTypeScript(
                                     })
                                     break
                                 case "method":
-                                    pl.cc($.value.type[1], ($) => {
+                                    pl.cc($.type[1], ($) => {
                                         $w.snippet(`($: ${getNestedType($.type).getIdentifier()}`)
 
                                         $w.snippet(`) => `)
@@ -2012,7 +2010,7 @@ export function generateTypeScript(
                                                     generateInterfaceDefinition(
                                                         $.interface,
                                                         $w,
-                                                        $pi.value["namespace reference"].namespace,
+                                                        $pi["namespace reference"].namespace,
                                                         () => { },
                                                     )
                                                 })
@@ -2028,20 +2026,20 @@ export function generateTypeScript(
                                     })
                                     break
                                 case "reference":
-                                    pl.cc($.value.type[1], ($) => {
+                                    pl.cc($.type[1], ($) => {
                                         generateNamespacedIdentifier(
                                             $["namespace selection"],
                                             $w,
                                             ($w) => {
                                                 $w.snippet(`_${$.interface}_I`)
                                             },
-                                            $pi.value["namespace reference"].namespace,
+                                            $pi["namespace reference"].namespace,
                                             () => { },
                                         )
                                     })
                                     break
                                 default:
-                                    pl.au($.value.type[0])
+                                    pl.au($.type[0])
                             }
                         })
                     })
@@ -2054,7 +2052,7 @@ export function generateTypeScript(
                             generateInterfaceDefinition(
                                 $.interface,
                                 $w,
-                                $pi.value["namespace reference"].namespace,
+                                $pi["namespace reference"].namespace,
                                 ($w) => {
 
                                 },
@@ -2097,12 +2095,12 @@ export function generateTypeScript(
                     $w.snippet(`(`)
                     $w.snippet(`{`)
                     $w.indent(($w) => {
-                        $["interface arguments"].toArray().forEach(($) => {
+                        $["interface arguments"].forEach(() => false, ($, key) => {
                             $w.line(($w) => {
-                                $w.snippet(`${generateQuoted($.key)}: `)
+                                $w.snippet(`${generateQuoted(key)}: `)
 
                                 generateInterfaceExpression(
-                                    $.value.expression,
+                                    $.expression,
                                     $w,
                                     {},
                                 )
@@ -2182,11 +2180,11 @@ export function generateTypeScript(
                                                 pl.cc($.strategy[1], ($) => {
                                                     $w.snippet(`{`)
                                                     $w.indent(($w) => {
-                                                        $.members.toArray().forEach(($) => {
+                                                        $.members.forEach(() => false, ($, key) => {
                                                             $w.line(($w) => {
-                                                                $w.snippet(`${generateQuoted($.key)}: `)
+                                                                $w.snippet(`${generateQuoted(key)}: `)
                                                                 generateInterfaceExpression(
-                                                                    $.value.expression,
+                                                                    $.expression,
                                                                     $w,
                                                                     {},
                                                                 )
@@ -2253,11 +2251,11 @@ export function generateTypeScript(
                                     pl.cc($.type[1], ($) => {
                                         $w.snippet(`{`)
                                         $w.indent(($w) => {
-                                            $.entries.toArray().forEach(($) => {
+                                            $.entries.forEach(() => false, ($, key) => {
                                                 $w.line(($w) => {
-                                                    $w.snippet(`${generateQuoted($.key)}: `)
+                                                    $w.snippet(`${generateQuoted(key)}: `)
                                                     generateInterfaceExpression(
-                                                        $.value.expression,
+                                                        $.expression,
                                                         $w,
                                                         {},
                                                     )
@@ -2280,11 +2278,11 @@ export function generateTypeScript(
             $w.snippet(`{`)
             $w.indent(($w) => {
                 const $block = $
-                $.markers.toArray().forEach(($) => {
+                $.markers.forEach(() => false, ($, key) => {
                     $w.line(($w) => {
-                        $w.snippet(`const ${generateIdentifier($.key)}_m = `)
+                        $w.snippet(`const ${generateIdentifier(key)}_m = `)
                         generateContextSelection(
-                            $.value.selection,
+                            $.selection,
                             $w,
                             {
                                 context: $r.context,
@@ -2292,36 +2290,35 @@ export function generateTypeScript(
                                 states: $r.states.concat([$block.states]),
                                 nestedFunctions: [],
                                 externalFunctions: decl.functions,
-                                namespaceName: $pi.value["namespace reference"].namespace,
+                                namespaceName: $pi["namespace reference"].namespace,
                             },
                         )
                     })
                 })
-                $.states.toArray().forEach(($) => {
-                    const key = $.key
+                $.states.forEach(() => false, ($, key) => {
                     $w.line(($w) => {
-                        switch ($.value.type[0]) {
+                        switch ($.type[0]) {
                             case "dictionary":
-                                pl.cc($.value.type[1], ($) => {
+                                pl.cc($.type[1], ($) => {
                                     $w.snippet(`const ${generateIdentifier(key)}_s: { [key: string]: `)
                                     $w.snippet(`${getNestedType($.type).dictionary().getIdentifier()}`)
                                     $w.snippet(` } = {}`)
                                 })
                                 break
                             case "list":
-                                pl.cc($.value.type[1], ($) => {
+                                pl.cc($.type[1], ($) => {
                                     $w.snippet(`const ${generateIdentifier(key)}_s: `)
                                     $w.snippet(`${getNestedType($.type).list().getIdentifier()}`)
                                     $w.snippet(`[] = []`)
                                 })
                                 break
                             case "string":
-                                pl.cc($.value.type[1], ($) => {
+                                pl.cc($.type[1], ($) => {
                                     $w.snippet(`let ${generateIdentifier(key)}_s = ${generateQuoted($["initial value"])}`)
                                 })
                                 break
                             case "type5":
-                                pl.cc($.value.type[1], ($) => {
+                                pl.cc($.type[1], ($) => {
                                     $w.snippet(`let ${generateIdentifier(key)}_s: `)
                                     $w.snippet(`${getNestedType($["nested type"]).getIdentifier()}`)
                                     doDictionary(
@@ -2352,22 +2349,22 @@ export function generateTypeScript(
                                             states: $r.states.concat([$block.states]),
                                             nestedFunctions: [],
                                             externalFunctions: decl.functions,
-                                            namespaceName: $pi.value["namespace reference"].namespace,
+                                            namespaceName: $pi["namespace reference"].namespace,
                                         },
                                     )
                                 })
                                 break
                             default:
-                                pl.au($.value.type[0])
+                                pl.au($.type[0])
                         }
                     })
                 })
-                $["nested procedures"].toArray().forEach(($) => {
+                $["nested procedures"].forEach(() => false, ($, key) => {
                     //console.error(`NESTED PROCEDURE: ${key}`)
                     $w.line(($w) => {
-                        $w.snippet(`function ${generateIdentifier($.key)}_NIC`)
+                        $w.snippet(`function ${generateIdentifier(key)}_NIC`)
                         generateInternalProcedureSpecification(
-                            $.value.specification,
+                            $.specification,
                             $w,
                             ``,
                             {},
@@ -2395,7 +2392,7 @@ export function generateTypeScript(
                                             states: allStates,
                                             nestedFunctions: [],
                                             externalFunctions: decl.functions,
-                                            namespaceName: $pi.value["namespace reference"].namespace,
+                                            namespaceName: $pi["namespace reference"].namespace,
                                         },
                                     )
                                     $w.snippet(`)`)
@@ -2416,13 +2413,13 @@ export function generateTypeScript(
                                             context: $r.context,
                                             target: getTypeReference(
                                                 $method.type,
-                                                $pi.value["namespace reference"].namespace,
+                                                $pi["namespace reference"].namespace,
                                             ),
                                             markedValues: allMarkers,
                                             states: allStates,
                                             nestedFunctions: [],
                                             externalFunctions: decl.functions,
-                                            namespaceName: $pi.value["namespace reference"].namespace,
+                                            namespaceName: $pi["namespace reference"].namespace,
                                         },
                                     )
                                     $w.snippet(`)`)
@@ -2453,7 +2450,7 @@ export function generateTypeScript(
                                                         states: allStates,
                                                         nestedFunctions: [],
                                                         externalFunctions: decl.functions,
-                                                        namespaceName: $pi.value["namespace reference"].namespace,
+                                                        namespaceName: $pi["namespace reference"].namespace,
                                                     },
                                                 )
                                             })
@@ -2470,7 +2467,7 @@ export function generateTypeScript(
                                                         states: allStates,
                                                         nestedFunctions: [],
                                                         externalFunctions: decl.functions,
-                                                        namespaceName: $pi.value["namespace reference"].namespace,
+                                                        namespaceName: $pi["namespace reference"].namespace,
                                                     },
                                                 )
                                             })
@@ -2495,7 +2492,7 @@ export function generateTypeScript(
                                                                     states: allStates,
                                                                     nestedFunctions: [],
                                                                     externalFunctions: decl.functions,
-                                                                    namespaceName: $pi.value["namespace reference"].namespace,
+                                                                    namespaceName: $pi["namespace reference"].namespace,
                                                                 },
                                                             )
                                                             $w.snippet(`] = `)
@@ -2511,7 +2508,7 @@ export function generateTypeScript(
                                                                     states: allStates,
                                                                     nestedFunctions: [],
                                                                     externalFunctions: decl.functions,
-                                                                    namespaceName: $pi.value["namespace reference"].namespace,
+                                                                    namespaceName: $pi["namespace reference"].namespace,
                                                                 },
                                                             )
                                                         })
@@ -2543,7 +2540,7 @@ export function generateTypeScript(
                                                                     states: allStates,
                                                                     nestedFunctions: [],
                                                                     externalFunctions: decl.functions,
-                                                                    namespaceName: $pi.value["namespace reference"].namespace,
+                                                                    namespaceName: $pi["namespace reference"].namespace,
                                                                 },
                                                             )
                                                             $w.snippet(`)`)
@@ -2587,9 +2584,9 @@ export function generateTypeScript(
         }
         $w.line(() => { })
         $w.line(($w) => {
-            $w.snippet(`export function ${generateIdentifier($.key)}_pi`)
+            $w.snippet(`export function ${generateIdentifier(key)}_pi`)
             doDictionary(
-                $.value["type parameters"],
+                $["type parameters"],
                 () => {
                     //
                 },
@@ -2610,11 +2607,11 @@ export function generateTypeScript(
                 decl,
                 $w,
                 ":",
-                $.value["namespace reference"].namespace,
+                $["namespace reference"].namespace,
                 ($w) => {
                     doDictionary(
                         //should be parameters
-                        $.value["namespace reference"]["type arguments"],
+                        $["namespace reference"]["type arguments"],
                         () => {
                             //
                         },
@@ -2636,10 +2633,10 @@ export function generateTypeScript(
             )
             $w.snippet(` `)
             generateprocedureBlock(
-                $.value.block,
+                $.block,
                 $w,
                 {
-                    context: getTypeReference(decl.context, $pi.value["namespace reference"].namespace),
+                    context: getTypeReference(decl.context, $pi["namespace reference"].namespace),
                     interfaces: decl.interfaces,
                     parameters: [],
                     markedValues: [],
