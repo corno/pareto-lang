@@ -19,7 +19,7 @@
     "url": "git+https://github.com/corno/pareto-lang.git"
   },
   "types": "dist/index.d.ts",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "dependencies": {
     "pareto-api-core": "^0.3.0"
   },
