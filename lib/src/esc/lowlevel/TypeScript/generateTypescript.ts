@@ -5,7 +5,7 @@
 import * as pa from "pareto-api-core"
 import * as pl from "pareto-lib-core"
 import * as ll from "../generated/types"
-import { Block, Line } from "./WriteAPI"
+import * as fp from "fountain-pen-api"
 
 function doDictionary<T>(
     dict: pa.IReadonlyDictionary<T>,
@@ -233,19 +233,19 @@ function numberToString($: string) { //FIX this should be a number
 
 export function generateTypeScript(
     $: ll.__root_T,
-    $w: Block,
+    $w: fp.IBlock,
 ): void {
     const $root = $
     function generateProcedureDeclaration(
         $: ll.__procedure_declarations_T,
-        $w: Line,
+        $w: fp.ILine,
         arrowOrColon: string,
         namespaceName: string,
-        typeArgumentsCallback: ($w: Line) => void,
+        typeArgumentsCallback: ($w: fp.ILine) => void,
     ) {
         $w.snippet(`(`)
-        $w.indent(($w) => {
-            $w.line(($w) => {
+        $w.indent({}, ($w) => {
+            $w.line({}, ($w) => {
                 $w.snippet(`$c: `)
                 generateTypeReference(
                     $.context,
@@ -257,12 +257,12 @@ export function generateTypeScript(
                 )
                 $w.snippet(`,`)
             })
-            $w.line(($w) => {
+            $w.line({}, ($w) => {
                 $w.snippet(`$i: `)
                 $w.snippet(`{`)
-                $w.indent(($w) => {
+                $w.indent({}, ($w) => {
                     $.interfaces.forEach(() => false, ($, key) => {
-                        $w.line(($w) => {
+                        $w.line({}, ($w) => {
                             $w.snippet(`${generateQuoted(key)}: `)
                             generateInterfaceDefinition(
                                 $.interface,
@@ -275,12 +275,12 @@ export function generateTypeScript(
                 })
                 $w.snippet(`},`)
             })
-            $w.line(($w) => {
+            $w.line({}, ($w) => {
                 $w.snippet(`$b: `)
                 $w.snippet(`{`)
-                $w.indent(($w) => {
+                $w.indent({}, ($w) => {
                     $.builders.forEach(() => false, ($, key) => {
-                        $w.line(($w) => {
+                        $w.line({}, ($w) => {
                             $w.snippet(`${generateQuoted(key)}: `)
                             generateNamespacedIdentifier(
                                 $["namespace selection"],
@@ -296,12 +296,12 @@ export function generateTypeScript(
                 })
                 $w.snippet(`},`)
             })
-            $w.line(($w) => {
+            $w.line({}, ($w) => {
                 $w.snippet(`$f: `)
                 $w.snippet(`{`)
-                $w.indent(($w) => {
+                $w.indent({}, ($w) => {
                     $.functions.forEach(() => false, ($, key) => {
-                        $w.line(($w) => {
+                        $w.line({}, ($w) => {
                             $w.snippet(`${generateQuoted(key)}: `)
                             generateFunctionDeclaration(
                                 $.declaration,
@@ -339,10 +339,10 @@ export function generateTypeScript(
     }
     function generateNamespacedIdentifier(
         $: ll.__namespace_selection_T,
-        $w: Line,
-        identifier: ($w: Line) => void,
+        $w: fp.ILine,
+        identifier: ($w: fp.ILine) => void,
         namespaceName: string,
-        typeArgumentsCallback: ($w: Line) => void,
+        typeArgumentsCallback: ($w: fp.ILine) => void,
     ) {
         switch ($.which[0]) {
             case "current":
@@ -356,7 +356,7 @@ export function generateTypeScript(
                 pl.cc($.which[1], ($) => {
                     function generateNamespaceReference(
                         $: ll.__namespace_reference_T,
-                        $w: Line,
+                        $w: fp.ILine,
                     ) {
                         $w.snippet(`${generateIdentifier($.namespace)}`)
                         identifier($w)
@@ -391,10 +391,10 @@ export function generateTypeScript(
     }
     function generateFunctionDeclaration(
         $: ll.__function_declaration_T,
-        $w: Line,
+        $w: fp.ILine,
         arrowOrColon: string,
         namespaceName: string,
-        typeArgumentsCallback: ($w: Line) => void,
+        typeArgumentsCallback: ($w: fp.ILine) => void,
     ) {
         $w.snippet(`($c: `)
         generateTypeReference(
@@ -414,9 +414,9 @@ export function generateTypeScript(
     }
     function generateTypeReference(
         $: ll.__type_reference_T,
-        $w: Line,
+        $w: fp.ILine,
         namespaceName: string,
-        typeArgumentsCallback: ($w: Line) => void,
+        typeArgumentsCallback: ($w: fp.ILine) => void,
     ) {
         const $$ = $
         generateNamespacedIdentifier(
@@ -431,16 +431,16 @@ export function generateTypeScript(
     }
     function generateInterfaceDefinition(
         $: ll.__interface_definition_T,
-        $w: Line,
+        $w: fp.ILine,
         namespaceName: string,
-        typeArgumentsCallback: ($w: Line) => void,
+        typeArgumentsCallback: ($w: fp.ILine) => void,
     ) {
         switch ($.type[0]) {
             case "dictionary":
                 pl.cc($.type[1], ($) => {
                     $w.snippet(`{`)
-                    $w.indent(($w) => {
-                        $w.line(($w) => {
+                    $w.indent({}, ($w) => {
+                        $w.line({}, ($w) => {
                             $w.snippet(`[key: string]: `)
                             generateInterfaceDefinition(
                                 $.entry,
@@ -456,9 +456,9 @@ export function generateTypeScript(
             case "group":
                 pl.cc($.type[1], ($) => {
                     $w.snippet(`{`)
-                    $w.indent(($w) => {
+                    $w.indent({}, ($w) => {
                         $.members.forEach(() => false, ($, key) => {
-                            $w.line(($w) => {
+                            $w.line({}, ($w) => {
                                 $w.snippet(`${generateQuoted(key)}: `)
                                 generateInterfaceDefinition(
                                     $.definition,
@@ -523,7 +523,7 @@ export function generateTypeScript(
     }
     function generateMissingHandler(
         $: ll.__missing_handler_T,
-        $w: Block,
+        $w: fp.IBlock,
         $r: {
             context: TypeNameBuilder
             target: TypeNameBuilder
@@ -537,11 +537,11 @@ export function generateTypeScript(
         switch ($.guaranteed[0]) {
             case "no":
                 pl.cc($.guaranteed[1], ($) => {
-                    $w.line(($w) => {
+                    $w.line({}, ($w) => {
 
                         $w.snippet(`if ($c === undefined) {`)
-                        $w.indent(($w) => {
-                            $w.line(($w) => {
+                        $w.indent({}, ($w) => {
+                            $w.line({}, ($w) => {
                                 $w.snippet(`return `)
                                 generateTypeExpression(
                                     $["on missing"],
@@ -672,7 +672,7 @@ export function generateTypeScript(
     }
     function generateContextStart(
         $: ll.__context_start_T,
-        $w: Block,
+        $w: fp.IBlock,
         $r: {
             context: TypeNameBuilder
             markedValues: pa.IReadonlyDictionary<ll.__markers_T>[]
@@ -683,7 +683,7 @@ export function generateTypeScript(
         },
     ) {
         let context = $r.context
-        $w.line(($w) => {
+        $w.line({}, ($w) => {
             $w.snippet(`const FOO = `)
             switch ($.start[0]) {
                 case "marked value":
@@ -790,7 +790,7 @@ export function generateTypeScript(
     }
     function generateContextSelection(
         $: ll.__context_selection_T,
-        $w: Line,
+        $w: fp.ILine,
         $r: {
             context: TypeNameBuilder
             markedValues: pa.IReadonlyDictionary<ll.__markers_T>[]
@@ -802,7 +802,7 @@ export function generateTypeScript(
     ) {
 
         $w.snippet(`(() => {`)
-        $w.indent(($w) => {
+        $w.indent({}, ($w) => {
             generateContextStart(
                 $["start"],
                 $w,
@@ -816,7 +816,7 @@ export function generateTypeScript(
                 },
             )
             $.steps.forEach(($) => {
-                $w.line(($w) => {
+                $w.line({}, ($w) => {
                     $w.snippet(`FIXME STEP ${$.property}`)
                 })
                 //console.error("SET CONTEXT")
@@ -855,7 +855,7 @@ export function generateTypeScript(
     }
     function generateGuaranteedContextSelection(
         $: ll.__guaranteed_context_selection_T,
-        $w: Line,
+        $w: fp.ILine,
         $r: {
             context: TypeNameBuilder
             target: TypeNameBuilder
@@ -868,7 +868,7 @@ export function generateTypeScript(
     ) {
 
         $w.snippet(`((): ${$r.target.getIdentifier()} => {`)
-        $w.indent(($w) => {
+        $w.indent({}, ($w) => {
             generateMissingHandler(
                 $["missing handler"],
                 $w,
@@ -908,7 +908,7 @@ export function generateTypeScript(
                         namespaceName: $r.namespaceName,
                     },
                 )
-                $w.line(($w) => {
+                $w.line({}, ($w) => {
                     $w.snippet(`FIXME STEP ${$.property}`)
                 })
             })
@@ -917,7 +917,7 @@ export function generateTypeScript(
     }
     function generateStringExpression(
         $: ll.__string_expression_T,
-        $w: Line,
+        $w: fp.ILine,
         $r: {
             context: TypeNameBuilder
             markedValues: pa.IReadonlyDictionary<ll.__markers_T>[]
@@ -967,7 +967,7 @@ export function generateTypeScript(
     }
     function generateTypeExpression(
         $: ll.__type_expression_T,
-        $w: Line,
+        $w: fp.ILine,
         $r: {
             context: TypeNameBuilder
             target: TypeNameBuilder
@@ -1015,9 +1015,9 @@ export function generateTypeScript(
                         case "group":
                             pl.cc($.type[1], ($) => {
                                 $w.snippet(`{`)
-                                $w.indent(($w) => {
+                                $w.indent({}, ($w) => {
                                     $.properties.forEach(() => false, ($, key) => {
-                                        $w.line(($w) => {
+                                        $w.line({}, ($w) => {
                                             $w.snippet(`${generateQuoted(key)}: `)
                                             generateTypeExpression(
                                                 $.expression,
@@ -1159,15 +1159,15 @@ export function generateTypeScript(
                         },
                     )
                     $w.snippet(`switch ($c[0]) {`)
-                    $w.indent(($w) => {
+                    $w.indent({}, ($w) => {
                         $.options.forEach(() => false, ($, key) => {
-                            $w.line(($w) => {
+                            $w.line({}, ($w) => {
                                 $w.snippet(`case ${generateQuoted(key)}: {`)
-                                $w.indent(($w) => {
-                                    $w.line(($w) => {
+                                $w.indent({}, ($w) => {
+                                    $w.line({}, ($w) => {
                                         $w.snippet(`return pl.cc($c[1], ($c) => {`)
-                                        $w.indent(($w) => {
-                                            $w.line(($w) => {
+                                        $w.indent({}, ($w) => {
+                                            $w.line({}, ($w) => {
                                                 $w.snippet(`return `)
                                                 generateTypeExpression(
                                                     $.expression,
@@ -1201,7 +1201,7 @@ export function generateTypeScript(
                                 $w.snippet(`}`)
                             })
                         })
-                        $w.line(($w) => {
+                        $w.line({}, ($w) => {
                             $w.snippet(`default: return pl.au($c[0])`)
                         })
                     })
@@ -1242,7 +1242,7 @@ export function generateTypeScript(
     }
     function generateTypeExpressionBlock(
         $: ll.__type_expression_block_T,
-        $w: Line,
+        $w: fp.ILine,
         $r: {
             context: TypeNameBuilder
             target: TypeNameBuilder
@@ -1254,11 +1254,11 @@ export function generateTypeScript(
         },
     ) {
         $w.snippet(`{`)
-        $w.indent(($w) => {
+        $w.indent({}, ($w) => {
             const $teb = $
             $["functions"].forEach(() => false, ($, key) => {
-                $w.line(() => { })
-                $w.line(($w) => {
+                $w.line({}, () => { })
+                $w.line({}, ($w) => {
                     $w.snippet(`function ${generateIdentifier(key)}_fi`)
                     // generateFunctionDeclaration(
                     //     $.declaration,
@@ -1309,7 +1309,7 @@ export function generateTypeScript(
                     )
                 })
             })
-            $w.line(($w) => {
+            $w.line({}, ($w) => {
                 $w.snippet(`return `)
                 generateTypeExpression(
                     $.expression,
@@ -1328,78 +1328,78 @@ export function generateTypeScript(
         })
         $w.snippet(`}`)
     }
-    $w.line(($w) => {
+    $w.line({}, ($w) => {
         $w.snippet(`/* eslint`)
-        $w.indent(($w) => {
-            $w.line(($w) => {
+        $w.indent({}, ($w) => {
+            $w.line({}, ($w) => {
                 $w.snippet(`"camelcase": 0,`)
             })
-            $w.line(($w) => {
+            $w.line({}, ($w) => {
                 $w.snippet(`"dot-notation": 0,`)
             })
-            $w.line(($w) => {
+            $w.line({}, ($w) => {
                 $w.snippet(`"no-underscore-dangle": 0,`)
             })
-            $w.line(($w) => {
+            $w.line({}, ($w) => {
                 $w.snippet(`"max-len": 0,`)
             })
-            $w.line(($w) => {
+            $w.line({}, ($w) => {
                 $w.snippet(`"@typescript-eslint/ban-types": 0,`)
             })
-            $w.line(($w) => {
+            $w.line({}, ($w) => {
                 $w.snippet(`"@typescript-eslint/no-empty-function": 0,`)
             })
-            $w.line(($w) => {
+            $w.line({}, ($w) => {
                 $w.snippet(`"@typescript-eslint/no-empty-interface": 0,`)
             })
-            $w.line(($w) => {
+            $w.line({}, ($w) => {
                 $w.snippet(`"@typescript-eslint/no-unused-vars": 0,`)
             })
         })
         $w.snippet(`*/`)
     })
-    $w.line(($w) => { })
-    $w.line(($w) => {
+    $w.line({}, ($w) => { })
+    $w.line({}, ($w) => {
         $w.snippet(`interface pa.IReadonlyDictionary<T> {`)
-        // $w.indent(($w) => {
-        //     $w.line(($w) => {
+        // $w.indent({}, ($w) => {
+        //     $w.line({}, ($w) => {
         //     })
         // })
-        $w.indent(($w) => {
-            $w.line(($w) => {
+        $w.indent({}, ($w) => {
+            $w.line({}, ($w) => {
                 $w.snippet(`forEach(callback: (e: T, key: string) => void): void`)
             })
         })
         $w.snippet(`}`)
     })
-    $w.line(($w) => { })
-    $w.line(($w) => {
+    $w.line({}, ($w) => { })
+    $w.line({}, ($w) => {
         $w.snippet(`function assertUnreachable<RT>(_x: never): RT {`)
-        $w.indent(($w) => {
-            $w.line(($w) => {
+        $w.indent({}, ($w) => {
+            $w.line({}, ($w) => {
                 $w.snippet(`throw new Error("unreachable")`)
             })
         })
         $w.snippet(`}`)
     })
-    $w.line(($w) => { })
-    $w.line(($w) => {
+    $w.line({}, ($w) => { })
+    $w.line({}, ($w) => {
         $w.snippet(`function cc<T, RT>(input: T, callback: (output: T) => RT): RT {`)
-        $w.indent(($w) => {
-            $w.line(($w) => {
+        $w.indent({}, ($w) => {
+            $w.line({}, ($w) => {
                 $w.snippet(`return callback(input)`)
             })
         })
         $w.snippet(`}`)
     })
-    $w.line(($w) => { })
-    $w.line(($w) => {
+    $w.line({}, ($w) => { })
+    $w.line({}, ($w) => {
         $w.snippet(`function createDictionary<T>(raw: { [key: string]: T }): pa.IReadonlyDictionary<T> {`)
-        $w.indent(($w) => {
-            $w.line(($w) => {
+        $w.indent({}, ($w) => {
+            $w.line({}, ($w) => {
                 $w.snippet(`return {`)
-                $w.indent(($w) => {
-                    $w.line(($w) => {
+                $w.indent({}, ($w) => {
+                    $w.line({}, ($w) => {
                         $w.snippet(`forEach: (callback: (e: T, key: string) => void) => { Object.keys(raw).sort().forEach((key) => { callback(raw[key], key) }) },`)
                     })
                 })
@@ -1408,14 +1408,14 @@ export function generateTypeScript(
         })
         $w.snippet(`}`)
     })
-    $w.line(($w) => { })
-    $w.line(($w) => {
+    $w.line({}, ($w) => { })
+    $w.line({}, ($w) => {
         $w.snippet(`function mapDictionary<T, RT>(source: pa.IReadonlyDictionary<T>, convert: (v: T) => RT): pa.IReadonlyDictionary<RT> {`)
-        $w.indent(($w) => {
-            $w.line(($w) => {
+        $w.indent({}, ($w) => {
+            $w.line({}, ($w) => {
                 $w.snippet(`return {`)
-                $w.indent(($w) => {
-                    $w.line(($w) => {
+                $w.indent({}, ($w) => {
+                    $w.line({}, ($w) => {
                         $w.snippet(`forEach: (callback: (e: RT, key: string) => void) => { source.forEach((e, key) => { callback(convert(e), key) }) },`)
                     })
                 })
@@ -1429,7 +1429,7 @@ export function generateTypeScript(
         const namespaceName = key
         //console.error(`NAMESPACE: ${namespaceName}`)
         function generateTypeParameters(
-            $w: Line
+            $w: fp.ILine
         ) {
             doDictionary(
                 ns["type parameters"],
@@ -1455,7 +1455,7 @@ export function generateTypeScript(
             function generateTypeUsage(
                 $: ll.__type_T,
                 x: TypeNameBuilder,
-                $w: Line,
+                $w: fp.ILine,
             ) {
                 switch ($.occurence[0]) {
                     case "required": {
@@ -1556,8 +1556,8 @@ export function generateTypeScript(
                             $.entry,
                             x.dictionary(),
                         )
-                        $w.line(() => { })
-                        $w.line(($w) => {
+                        $w.line({}, () => { })
+                        $w.line({}, ($w) => {
                             $w.snippet(`type ${x.getIdentifier()}`)
                             generateTypeParameters($w)
                             $w.snippet(` = pa.IReadonlyDictionary<`)
@@ -1579,14 +1579,14 @@ export function generateTypeScript(
                             )
                         })
                         //generate code for this type
-                        $w.line(() => { })
-                        $w.line(($w) => {
+                        $w.line({}, () => { })
+                        $w.line({}, ($w) => {
                             $w.snippet(`type ${x.getIdentifier()}`)
                             generateTypeParameters($w)
                             $w.snippet(` = {`)
-                            $w.indent(($w) => {
+                            $w.indent({}, ($w) => {
                                 $.properties.forEach(() => false, ($$) => {
-                                    $w.line(($w) => {
+                                    $w.line({}, ($w) => {
                                         $w.snippet(`readonly ${generateQuoted(key)}`)
                                         $w.snippet(`: `)
                                         generateTypeUsage(
@@ -1608,8 +1608,8 @@ export function generateTypeScript(
                             x.list(),
                         )
                         //generate code for this type
-                        $w.line(() => { })
-                        $w.line(($w) => {
+                        $w.line({}, () => { })
+                        $w.line({}, ($w) => {
                             $w.snippet(`type ${x.getIdentifier()}`)
                             generateTypeParameters($w)
                             $w.snippet(` = `)
@@ -1637,14 +1637,14 @@ export function generateTypeScript(
                                 tu.option(key)
                             )
                         })
-                        $w.line(() => { })
-                        $w.line(($w) => {
+                        $w.line({}, () => { })
+                        $w.line({}, ($w) => {
                             $w.snippet(`type ${x.getIdentifier()}`)
                             generateTypeParameters($w)
                             $w.snippet(` = `)
-                            $w.indent(($w) => {
+                            $w.indent({}, ($w) => {
                                 $.options.forEach(() => false, ($, key) => {
-                                    $w.line(($w) => {
+                                    $w.line({}, ($w) => {
                                         $w.snippet(`| [${generateQuoted(key)}, `)
                                         generateTypeUsage(
                                             $.type,
@@ -1672,8 +1672,8 @@ export function generateTypeScript(
                 createNameBuilder($root, namespaceName).type(key),
             )
             //generate code for this type
-            $w.line(() => { })
-            $w.line(($w) => {
+            $w.line({}, () => { })
+            $w.line({}, ($w) => {
                 $w.snippet(`type ${generateIdentifier(namespaceName)}_${generateIdentifier(key)}_T`)
                 generateTypeParameters($w)
                 $w.snippet(` = `)
@@ -1685,8 +1685,8 @@ export function generateTypeScript(
             })
         })
         ns.interfaces.forEach(() => false, ($, key) => {
-            $w.line(() => { })
-            $w.line(($w) => {
+            $w.line({}, () => { })
+            $w.line({}, ($w) => {
                 $w.snippet(`export type ${generateIdentifier(namespaceName)}_${generateIdentifier(key)}_I`)
                 generateTypeParameters($w)
                 $w.snippet(` = `)
@@ -1718,29 +1718,29 @@ export function generateTypeScript(
             })
         })
         ns["interface builders"].forEach(() => false, ($, key) => {
-            $w.line(() => { })
-            $w.line(($w) => {
+            $w.line({}, () => { })
+            $w.line({}, ($w) => {
                 $w.snippet(`export interface ${generateIdentifier(namespaceName)}_${generateIdentifier(key)}_IB`)
                 generateTypeParameters($w)
                 $w.snippet(` `)
                 $w.snippet(`{`)
-                $w.indent(($w) => {
+                $w.indent({}, ($w) => {
                     $.methods.forEach(() => false, ($, key) => {
                         function generateBuilderProcedureDeclaration(
                             $: ll.__builder_procedure_declaration_T,
-                            $w: Line,
+                            $w: fp.ILine,
                             arrowOrColon: string,
                             namespaceName: string,
-                            typeArgumentsCallback: ($w: Line) => void,
+                            typeArgumentsCallback: ($w: fp.ILine) => void,
                         ) {
                             $w.snippet(`(`)
-                            $w.indent(($w) => {
-                                $w.line(($w) => {
+                            $w.indent({}, ($w) => {
+                                $w.line({}, ($w) => {
                                     $w.snippet(`$i: `)
                                     $w.snippet(`{`)
-                                    $w.indent(($w) => {
+                                    $w.indent({}, ($w) => {
                                         $.interfaces.forEach(() => false, ($, key) => {
-                                            $w.line(($w) => {
+                                            $w.line({}, ($w) => {
                                                 $w.snippet(`${generateQuoted(key)}: `)
                                                 generateInterfaceDefinition(
                                                     $.interface,
@@ -1775,7 +1775,7 @@ export function generateTypeScript(
                                     pl.au($["return type"][0])
                             }
                         }
-                        $w.line(($w) => {
+                        $w.line({}, ($w) => {
                             $w.snippet(`${generateQuoted(key)}`)
                             generateBuilderProcedureDeclaration(
                                 $.declaration,
@@ -1810,8 +1810,8 @@ export function generateTypeScript(
             })
         })
         ns["function declarations"].forEach(() => false, ($, key) => {
-            $w.line(() => { })
-            $w.line(($w) => {
+            $w.line({}, () => { })
+            $w.line({}, ($w) => {
                 $w.snippet(`export type ${generateIdentifier(namespaceName)}_${generateIdentifier(key)}_PD`)
                 generateTypeParameters($w)
                 $w.snippet(` = `)
@@ -1844,8 +1844,8 @@ export function generateTypeScript(
             })
         })
         ns["procedure declarations"].forEach(() => false, ($, key) => {
-            $w.line(() => { })
-            $w.line(($w) => {
+            $w.line({}, () => { })
+            $w.line({}, ($w) => {
                 $w.snippet(`export type ${generateIdentifier(namespaceName)}_${generateIdentifier(key)}_PD`)
                 generateTypeParameters($w)
                 $w.snippet(` = `)
@@ -1881,8 +1881,8 @@ export function generateTypeScript(
     $["function implementations"].forEach(() => false, ($, key) => {
         //console.error(`FUNCTION IMP: ${key}`)
         const ns2 = $["namespace reference"]
-        $w.line(() => { })
-        $w.line(($w) => {
+        $w.line({}, () => { })
+        $w.line({}, ($w) => {
             const decl = find(find($root.namespaces, ns2.namespace)["function declarations"], $.declaration)
             $w.snippet(`export function ${generateIdentifier(key)}_fi`)
             doDictionary(
@@ -1954,7 +1954,7 @@ export function generateTypeScript(
 
         function generateprocedureBlock(
             $: ll.__procedure_block_T,
-            $w: Line,
+            $w: fp.ILine,
             $r: {
                 context: TypeNameBuilder
                 interfaces: pa.IReadonlyDictionary<ll.__interfaces_procedure_declarations_T>
@@ -1968,24 +1968,24 @@ export function generateTypeScript(
             const allMarkers = $r.markedValues.concat([$.markers])
             function generateInternalProcedureSpecification(
                 $: ll.__internal_procedure_specification_T,
-                $w: Line,
+                $w: fp.ILine,
                 arrowOrNothing: string,
                 $r: {
                 }
             ) {
                 $w.snippet(`($ip: `)
                 $w.snippet(`{`)
-                $w.indent(($w) => {
+                $w.indent({}, ($w) => {
                     $.parameters.forEach(() => false, ($, key) => {
-                        $w.line(($w) => {
+                        $w.line({}, ($w) => {
                             $w.snippet(`${generateQuoted(key)}: `)
                             switch ($.type[0]) {
                                 case "group":
                                     pl.cc($.type[1], ($) => {
                                         $w.snippet(`{`)
-                                        $w.indent(($w) => {
+                                        $w.indent({}, ($w) => {
                                             $.members.forEach(() => false, ($, key) => {
-                                                $w.line(($w) => {
+                                                $w.line({}, ($w) => {
                                                     $w.snippet(`${generateQuoted(key)}: `)
                                                     generateInterfaceDefinition(
                                                         $.definition,
@@ -2082,21 +2082,21 @@ export function generateTypeScript(
             }
             function generateInterfaceExpression(
                 $: ll.__interface_expression_T,
-                $w: Line,
+                $w: fp.ILine,
                 $r: {
                 },
             ) {
                 function generateProcedureCall(
                     $: ll.__procedure_call_T,
-                    $w: Line,
+                    $w: fp.ILine,
                     $r: {
                     },
                 ) {
                     $w.snippet(`(`)
                     $w.snippet(`{`)
-                    $w.indent(($w) => {
+                    $w.indent({}, ($w) => {
                         $["interface arguments"].forEach(() => false, ($, key) => {
-                            $w.line(($w) => {
+                            $w.line({}, ($w) => {
                                 $w.snippet(`${generateQuoted(key)}: `)
 
                                 generateInterfaceExpression(
@@ -2179,9 +2179,9 @@ export function generateTypeScript(
                                             case "inline":
                                                 pl.cc($.strategy[1], ($) => {
                                                     $w.snippet(`{`)
-                                                    $w.indent(($w) => {
+                                                    $w.indent({}, ($w) => {
                                                         $.members.forEach(() => false, ($, key) => {
-                                                            $w.line(($w) => {
+                                                            $w.line({}, ($w) => {
                                                                 $w.snippet(`${generateQuoted(key)}: `)
                                                                 generateInterfaceExpression(
                                                                     $.expression,
@@ -2208,7 +2208,7 @@ export function generateTypeScript(
                                                 pl.cc($.strategy[1], ($) => {
                                                     function generateNamedprocedureCall(
                                                         $: ll.__named_procedure_call_T,
-                                                        $w: Line,
+                                                        $w: fp.ILine,
                                                     ) {
                                                         switch ($.type[0]) {
                                                             case "external":
@@ -2250,9 +2250,9 @@ export function generateTypeScript(
                                 case "dictionary":
                                     pl.cc($.type[1], ($) => {
                                         $w.snippet(`{`)
-                                        $w.indent(($w) => {
+                                        $w.indent({}, ($w) => {
                                             $.entries.forEach(() => false, ($, key) => {
-                                                $w.line(($w) => {
+                                                $w.line({}, ($w) => {
                                                     $w.snippet(`${generateQuoted(key)}: `)
                                                     generateInterfaceExpression(
                                                         $.expression,
@@ -2276,10 +2276,10 @@ export function generateTypeScript(
                 }
             }
             $w.snippet(`{`)
-            $w.indent(($w) => {
+            $w.indent({}, ($w) => {
                 const $block = $
                 $.markers.forEach(() => false, ($, key) => {
-                    $w.line(($w) => {
+                    $w.line({}, ($w) => {
                         $w.snippet(`const ${generateIdentifier(key)}_m = `)
                         generateContextSelection(
                             $.selection,
@@ -2296,7 +2296,7 @@ export function generateTypeScript(
                     })
                 })
                 $.states.forEach(() => false, ($, key) => {
-                    $w.line(($w) => {
+                    $w.line({}, ($w) => {
                         switch ($.type[0]) {
                             case "dictionary":
                                 pl.cc($.type[1], ($) => {
@@ -2361,7 +2361,7 @@ export function generateTypeScript(
                 })
                 $["nested procedures"].forEach(() => false, ($, key) => {
                     //console.error(`NESTED PROCEDURE: ${key}`)
-                    $w.line(($w) => {
+                    $w.line({}, ($w) => {
                         $w.snippet(`function ${generateIdentifier(key)}_NIC`)
                         generateInternalProcedureSpecification(
                             $.specification,
@@ -2372,7 +2372,7 @@ export function generateTypeScript(
                     })
                 })
                 $.effects.forEach(($) => {
-                    $w.line(($w) => {
+                    $w.line({}, ($w) => {
                         switch ($.type[0]) {
                             case "internal interface call":
                                 pl.cc($.type[1], ($) => {
@@ -2564,7 +2564,7 @@ export function generateTypeScript(
                 switch ($["return value"][0]) {
                     case "interface":
                         pl.cc($["return value"][1], ($) => {
-                            $w.line(($w) => {
+                            $w.line({}, ($w) => {
                                 $w.snippet(`return `)
                                 generateInterfaceExpression(
                                     $.expression,
@@ -2582,8 +2582,8 @@ export function generateTypeScript(
             })
             $w.snippet(`}`)
         }
-        $w.line(() => { })
-        $w.line(($w) => {
+        $w.line({}, () => { })
+        $w.line({}, ($w) => {
             $w.snippet(`export function ${generateIdentifier(key)}_pi`)
             doDictionary(
                 $["type parameters"],

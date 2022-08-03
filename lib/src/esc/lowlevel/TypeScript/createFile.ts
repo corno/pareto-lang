@@ -1,16 +1,16 @@
-import { Block, Line } from "./WriteAPI"
+import * as fp from "fountain-pen-api"
 
 export function createFile(
     indentation: string,
     newline: string,
     write: (str: string,) => void,
-): Block {
+): fp.IBlock {
     let isFirstLine = true
     function createBlock(
         indentation: string,
         currentIndentation: string,
         flush: () => void,
-    ): Block {
+    ): fp.IBlock {
         return {
             line: (callback) => {
                 flush()
@@ -22,7 +22,7 @@ export function createFile(
                 function createLine(
                     indentation: string,
                     currentIndentation: string,
-                ): Line {
+                ): fp.ILine {
                     return {
                         indent: (callback) => {
                             callback(createBlock(
